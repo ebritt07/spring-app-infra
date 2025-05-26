@@ -3,18 +3,20 @@ name: tf-plan
 on:
   workflow_call:
     inputs:
-      environment:
+      env:
         required: true
+        type: string
+      role_to_assume:
+        required: false
         type: string
 
 jobs:
   tf-plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     steps:
       - name: Log environment
         run: |
-          echo "Running tf-plan for environment: ${{ inputs.environment }}"
+          echo "Running tf-plan for environment: ${{ inputs.env }}"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -22,12 +24,12 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
         with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-to-assume: ${{ inputs.role_to_assume }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-1
           
       - name: AWS WhoAmI and S3 upload
         run: |
-          BUCKET_NAME="${{inputs.environment}}-test-bucket-${{ github.run_id }}"
+          BUCKET_NAME="${{inputs.env}}-test-bucket-${{ github.run_id }}"
           echo "Creating bucket: $BUCKET_NAME"
           aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1

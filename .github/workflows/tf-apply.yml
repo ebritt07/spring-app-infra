@@ -3,7 +3,7 @@ name: tf-apply
 on:
   workflow_call:
     inputs:
-      environment:
+      env:
         required: true
         type: string
 
@@ -14,4 +14,4 @@ jobs:
       - name: tf-apply
         run: |
           BUCKET_NAME="test-bucket-${{ github.run_id }}"
-          echo "this will eventually deploy $BUCKET_NAME to the ${{ inputs.environment }} AWS environment"
+          echo "this will eventually deploy $BUCKET_NAME to the ${{ inputs.env }} AWS environment"

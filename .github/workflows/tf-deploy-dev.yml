@@ -20,11 +20,13 @@ jobs:
   tf-plan:
     uses: ./.github/workflows/tf-plan.yml
     with:
-      environment: "dev"
+      env: "dev"
+      role_to_assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
 
   tf-apply:
     needs: tf-plan
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
     uses: ./.github/workflows/tf-apply.yml
     with:
-      environment: "dev"
+      env: "dev"
+      role_to_assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
