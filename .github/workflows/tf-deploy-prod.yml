@@ -1,5 +1,9 @@
 name: tf-deploy (prod)
 
+permissions:
+  id-token: write
+  contents: read
+  
 on:
   push:
     tags: [v*]
