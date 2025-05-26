@@ -8,10 +8,14 @@ on:
         type: string
 
 jobs:
-  build:
+  tf-plan:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
+      - name: Log environment
+        run: |
+          echo "Running tf-plan for environment: ${{ inputs.environment }}"
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
