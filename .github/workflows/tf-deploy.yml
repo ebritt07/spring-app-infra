@@ -37,7 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ needs.get-env.outputs.env }}
     outputs:
-      role_arn: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+      role_arn: ${{steps.get_role_arn.outputs.role_arn}}
+    steps:
+      - name: Get role ARN from environment
+        id: get_role_arn
+        run: echo "role_arn=${{ secrets.AWS_DEPLOY_ROLE_ARN }}" >> $GITHUB_OUTPUT
+
 
   tf-plan:
     needs: [get-env, get-env-vars]
