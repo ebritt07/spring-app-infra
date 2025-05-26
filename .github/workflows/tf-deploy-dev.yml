@@ -1,0 +1,26 @@
+name: tf-deploy (dev)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      apply-changes:
+        description: 'Apply terraform changes (DEV) ?'
+        required: true
+        default: 'no'
+
+jobs:
+  tf-plan:
+    uses: ./.github/workflows/tf-plan.yml
+    with:
+      environment: "dev"
+
+  tf-apply:
+    needs: tf-plan
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
+    uses: ./.github/workflows/tf-apply.yml
+    with:
+      environment: "dev"
