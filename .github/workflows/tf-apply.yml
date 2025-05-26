@@ -6,9 +6,6 @@ on:
       env:
         required: true
         type: string
-      role_to_assume:
-        required: true
-        type: string
 
 
 jobs:

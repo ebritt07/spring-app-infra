@@ -32,29 +32,15 @@ jobs:
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
 
-  get-env-vars:
-    needs: get-env
-    runs-on: ubuntu-latest
-    environment: ${{ needs.get-env.outputs.env }}
-    outputs:
-      role_arn: ${{steps.get_role_arn.outputs.role_arn}}
-    steps:
-      - name: Get role ARN from environment
-        id: get_role_arn
-        run: echo "role_arn=${{ secrets.AWS_DEPLOY_ROLE_ARN }}" >> $GITHUB_OUTPUT
-
-
   tf-plan:
-    needs: [get-env, get-env-vars]
+    needs: [get-env]
     uses: ./.github/workflows/tf-plan.yml
     with:
       env: ${{needs.get-env.outputs.env}}
-      role_to_assume: ${{ needs.get-env-vars.outputs.role_arn }}
 
   tf-apply:
-    needs: [tf-plan, get-env, get-env-vars]
+    needs: [tf-plan, get-env]
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
     uses: ./.github/workflows/tf-apply.yml
     with:
       env: ${{needs.get-env.outputs.env}}
-      role_to_assume: ${{ needs.get-env-vars.outputs.role_arn }}

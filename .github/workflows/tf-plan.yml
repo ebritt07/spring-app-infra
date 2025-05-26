@@ -6,13 +6,11 @@ on:
       env:
         required: true
         type: string
-      role_to_assume:
-        required: false
-        type: string
 
 jobs:
   tf-plan:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
     steps:
 
       - name: Checkout repo
@@ -20,8 +18,9 @@ jobs:
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
+        
         with:
-          role-to-assume: ${{ inputs.role_to_assume }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-1
           
