@@ -1,0 +1,11 @@
+name: tf-apply
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-manually:
+    runs-on: ubuntu-latest
+    steps:
+      - name: tf-apply
+        run: echo "this will eventually deploy lots of stuff to AWS"

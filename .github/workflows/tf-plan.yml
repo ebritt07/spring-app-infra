@@ -1,0 +1,34 @@
+name: tf-plan
+
+on:
+  push:
+    branches: [main]
+  
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: us-east-1
+          
+      - name: AWS WhoAmI and S3 upload
+        run: |
+          echo "files in current directory:"
+          ls .
+          aws sts get-caller-identity
+
+          BUCKET_NAME="test-bucket-${{ github.run_id }}"
+          echo "Creating bucket: $BUCKET_NAME"
+          aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1
