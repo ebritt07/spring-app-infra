@@ -10,7 +10,7 @@ on:
 jobs:
   tf-plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env }}
+    environment: dev
     steps:
 
       - name: Checkout repo
