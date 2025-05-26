@@ -6,12 +6,16 @@ on:
       env:
         required: true
         type: string
+      role_to_assume:
+        required: true
+        type: string
+
 
 jobs:
   tf-apply-manual:
     runs-on: ubuntu-latest
     steps:
-      - name: tf-apply
+      - name: tf-apply-${{inputs.env}}
         run: |
           BUCKET_NAME="test-bucket-${{ github.run_id }}"
           echo "this will eventually deploy $BUCKET_NAME to the ${{ inputs.env }} AWS environment"

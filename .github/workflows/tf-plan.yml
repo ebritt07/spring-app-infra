@@ -14,9 +14,6 @@ jobs:
   tf-plan:
     runs-on: ubuntu-latest
     steps:
-      - name: Log environment
-        run: |
-          echo "Running tf-plan for environment: ${{ inputs.env }}"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -28,7 +25,7 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-1
           
-      - name: AWS WhoAmI and S3 upload
+      - name: tf-plan-${{inputs.env}}
         run: |
           BUCKET_NAME="${{inputs.env}}-test-bucket-${{ github.run_id }}"
           echo "Creating bucket: $BUCKET_NAME"
