@@ -1,4 +1,5 @@
 name: tf-destroy-dev
+# runs 10am UTC sunday and monday, or on manual trigger with confirmation
 
 env:
     environment: dev
@@ -9,6 +10,9 @@ on:
       confirm_destroy:
         description: "Type 'DESTROY' to confirm"
         required: true
+  schedule:
+    - cron: '0 10 * * 0'  # Sunday at 10:00 UTC
+    - cron: '0 10 * * 1'  # Monday at 10:00 UTC
 
 permissions:
   id-token: write
@@ -16,7 +20,7 @@ permissions:
 
 jobs:
   tf-destroy-dev:
-    if: ${{ github.event.inputs.confirm_destroy == 'DESTROY' }}
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_destroy == 'DESTROY') }}
     runs-on: ubuntu-latest
     environment: dev
 
@@ -38,9 +42,6 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Show Terraform Destroy Plan
-        run: terraform plan -destroy -var-file="env/${{ env.environment }}/variables.tfvars"
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -var-file="env/${{ env.environment }}/variables.tfvars"
