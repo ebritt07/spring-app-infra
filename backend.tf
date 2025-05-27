@@ -1,5 +1,5 @@
 terraform {
-  backend "tf-remote-setup" {
+  backend "s3" {
     bucket         = "ebritt07-tfstate"
     key            = "terraform.tfstate"
     region         = "us-east-1"
