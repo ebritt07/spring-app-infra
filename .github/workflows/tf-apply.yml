@@ -2,6 +2,9 @@ name: tf-apply
 
 on:
   workflow_call:
+    secrets:
+      aws_role_to_assume:
+        required: true
     inputs:
       env:
         required: true

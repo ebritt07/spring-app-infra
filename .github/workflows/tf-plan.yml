@@ -2,19 +2,18 @@ name: tf-plan
 
 on:
   workflow_call:
+    secrets:
+      aws_role_to_assume:
+        required: true
     inputs:
       env:
         required: true
         type: string
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   tf-plan:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{inputs.env}}
     steps:
 
       - name: Checkout repo
@@ -24,7 +23,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.2.1
         
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.aws_role_to_assume }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-1
           
