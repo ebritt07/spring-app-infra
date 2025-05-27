@@ -1,7 +1,5 @@
 # ⛑️ Spring App Infra deployment 🛠️
 
-
-
 This project securely deploys the repo: https://github.com/ebritt07/spring-app using terraform
 - ✅ automatically **cleans your dev environment** each day in the morning, so you don't run up a bill!
 - ✅ runs security checks to make sure you are deploying infra safely, and doesn't use any secrets authenticating with AWS
