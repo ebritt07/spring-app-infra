@@ -1,9 +1,14 @@
+locals {
+  region = "us-east-1"
+  org_name = "ebritt07"
+}
+
 provider "aws" {
-  region = "${var.region}"
+  region = "${local.region}"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.org_name}-tfstate"
+  bucket = "${local.org_name}-tfstate"
      
   lifecycle {
     prevent_destroy = true
@@ -19,7 +24,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 }
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name           = "${var.org_name}-app-state"
+  name           = "${local.org_name}-app-state"
   read_capacity  = 1
   write_capacity = 1
   hash_key       = "LockID"
