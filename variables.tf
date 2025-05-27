@@ -5,15 +5,15 @@ variable "region" {
 }
 
 variable "org_name" {
-  description = "Organization name"
+  description = "org name, prepended for things like S3 bucket names"
   type        = string
-  default     = "ebritt07"
+  default     = "ebritt07-org"
 }
 
 variable "bucket_name" {
   description = "Name of the S3 bucket"
   type        = string
-  default     = "ebritt07-default-bucket-name"
+  default     = "${var.org_name}-default-bucket"
 }
 
 variable "zip_path" {

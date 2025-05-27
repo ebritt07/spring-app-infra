@@ -1,2 +1,2 @@
-bucket_name = "ebritt07-my-prod-bucket"
+bucket_name = "prod-bucket"
 region      = "us-east-1"

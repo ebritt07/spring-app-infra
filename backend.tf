@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "ebritt07-tfstate"
+    bucket         = "${var.org_name}-tfstate"
     key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "ebritt07-app-state"
+    dynamodb_table = "${var.org_name}-app-state"
     encrypt        = true
   }
 }
