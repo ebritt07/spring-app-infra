@@ -13,7 +13,7 @@ variable "bucket_name" {
 variable "zip_path" {
   description = "path to store lambda zip files"
   type        = string
-  default     = "zip_artifact"
+  default     = "zip_artifacts"
 }
 
 variable "s3_logger_lambda_name" {
