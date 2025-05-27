@@ -1,0 +1,48 @@
+name: tf-deploy-dev
+env:
+    environment: dev
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      apply-changes:
+        description: 'Apply terraform changes?'
+        required: true
+        default: 'no'
+
+jobs:
+  tf-plan:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4.2.1
+      with:
+        role-to-assume: ${{secrets.AWS_ROLE_ARN}}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: us-east-1
+
+    - name: tf-plan-${{env.environment}}
+      run: |
+        BUCKET_NAME="${{env.environment}}-test-bucket-${{ github.run_id }}"
+        echo "Creating bucket: $BUCKET_NAME"
+        aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1
+
+  tf-apply:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: tf-apply-${{env.environment}}
+        run: |
+          BUCKET_NAME="test-bucket-${{ github.run_id }}"
+          echo "this will eventually deploy $BUCKET_NAME to the ${{env.environment}} AWS environment"
