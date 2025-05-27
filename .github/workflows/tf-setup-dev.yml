@@ -1,4 +1,4 @@
-name: tf-destroy-dev
+name: tf-setup-state-dev
 
 env:
     environment: dev
