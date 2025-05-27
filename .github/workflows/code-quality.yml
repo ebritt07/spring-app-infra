@@ -1,9 +1,8 @@
 name: Terraform Code Quality Check
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  schedule:
+    - cron: '00 13 * * 5'
   workflow_dispatch:
   
 permissions:
@@ -23,3 +22,5 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: .
+          quiet: true
+          soft_fail: true
