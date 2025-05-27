@@ -50,8 +50,8 @@ jobs:
         name: tfplan
         path: tfplan
 
-    - name: Show all files in the current directory
-      run: ls -la
+    - name: Show all files in the zip artifacts directory
+      run: ls -la zip-artifacts
     
     - name: Upload Zip Artifacts
       uses: actions/upload-artifact@v4
