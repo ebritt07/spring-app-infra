@@ -1,9 +1,10 @@
 name: tf-destroy-dev
-# runs 10am UTC sunday and monday, or on manual trigger with confirmation
+# runs early every morning or on manual trigger with confirmation
 
 env:
     environment: dev
     terraform_version: 1.6.6
+    destroy_notify_email: "dev.ebritt07@gmail.com"
 on:
   workflow_dispatch:
     inputs:
@@ -11,8 +12,7 @@ on:
         description: "Type 'DESTROY' to confirm"
         required: true
   schedule:
-    - cron: '0 10 * * 0'  # Sunday at 10:00 UTC
-    - cron: '0 10 * * 1'  # Monday at 10:00 UTC
+    - cron: '0 10 * * *' # Daily at 10am UTC
 
 permissions:
   id-token: write
@@ -40,8 +40,20 @@ jobs:
         with:
           terraform_version: ${{ env.terraform_version }}
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Terraform Init, Plan, and save the plan as HTML
+        run: |
+          terraform init
+          terraform plan -destroy -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfdestroy.plan > /dev/null
+          terraform show tfdestroy.plan > tfplan.ansi
+          npm install -g ansi-to-html
+          ansi-to-html < tfplan-ansi.ansi > destroy-plan.html
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve -var-file="env/${{ env.environment }}/variables.tfvars"
+      - name: Show the generate ansi file and destroy plan
+        run: |
+          echo "Generated destroy plan:"
+          cat tfplan.ansi
+          cat destroy-plan.html
+          
+
+      #- name: Terraform Destroy
+      #  run: terraform destroy -auto-approve -var-file="env/${{ env.environment }}/variables.tfvars"
