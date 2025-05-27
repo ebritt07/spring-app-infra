@@ -1,6 +1,8 @@
 name: tf-deploy-prod
 env:
     environment: prod
+    terraform_version: 1.6.6
+    zip_artifacts: zip_artifacts
 
 permissions:
   id-token: write
@@ -11,7 +13,7 @@ on:
     tags: [v*]
 
 jobs:
-  tf-plan:
+  tf-plan-prod:
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -24,17 +26,66 @@ jobs:
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: us-east-1
 
-    - name: tf-plan-${{env.environment}}
-      run: |
-        BUCKET_NAME="${{env.environment}}-test-bucket-${{ github.run_id }}"
-        echo "Creating bucket: $BUCKET_NAME"
-        aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ env.terraform_version }}
 
-  tf-apply:
-    needs: [tf-plan]
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan (Save Output)
+      run: terraform plan -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfplan
+      
+    - name: Upload Plan Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: tfplan
+        path: tfplan
+    
+    - name: Upload Zip Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.zip_artifacts }}
+        path: ${{ env.zip_artifacts }}/
+
+  tf-apply-prod:
+    needs: [tf-plan-prod]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    environment: prod
     steps:
-      - name: tf-apply-${{env.environment}}
-        run: |
-          BUCKET_NAME="test-bucket-${{ github.run_id }}"
-          echo "this will eventually deploy $BUCKET_NAME to the ${{env.environment}} AWS environment"
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: us-east-1
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+
+      - name: Download Zip Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{env.zip_artifacts}}
+          path: ${{env.zip_artifacts}}/
+
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.terraform_version }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan

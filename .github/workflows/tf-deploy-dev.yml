@@ -41,10 +41,7 @@ jobs:
 
     - name: Terraform Plan (Save Output)
       run: terraform plan -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfplan
-
-    - name: Show Terraform Plan Output (with color)
-      run: terraform show tfplan
-    
+      
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v4
       with:
