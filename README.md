@@ -3,6 +3,7 @@
 This project securely deploys the repo: https://github.com/ebritt07/spring-app using terraform
 - ✅ automatically **cleans your dev environment** each day in the morning, so you don't run up a bill!
 - ✅ runs security checks to make sure you are deploying infra safely, and doesn't use any secrets authenticating with AWS
+- ✅ comes with a starter infra pack of an s3 bucket and a lambda trigger
 
 If you'd like to fork your own version of the spring java app, and deploy to your own AWS Account here's how you can do it:
 
@@ -34,3 +35,11 @@ If you'd like to fork your own version of the spring java app, and deploy to you
 
 4) Fork this repo, and create [Github secret in the appropriate env](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-an-environment), to store the IAM role you created as  `AWS_ROLE_ARN`
     - note, that [role ARN's are not considered secrets](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html). But, this project keeps it secret anyway
+    - for dev environments i'd reccomend giving your github iam role full admin access, then using monitoring tools to see what you need for prod
+
+5) (One rime only) set up your terraform backend to store state info
+    - update the region and org_name in `/setup-remote-state/main.tf` to your liking
+    - update `backend.tf` to match
+    - manually trigger the workflow `tf-setup-state-dev` in github actions
+
+6) Infra project is ready for use!
