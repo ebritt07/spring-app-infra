@@ -33,5 +33,6 @@ jobs:
 
       - name: Set up Terraform Backend
         run: |
-          cd env/${{ env.environment }}/setup-remote-state
-          terraform init && terraform apply -auto-approve
+          cd setup-remote-state
+          terraform init
+          terraform apply -auto-approve
