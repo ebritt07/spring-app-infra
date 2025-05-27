@@ -50,12 +50,6 @@ jobs:
       with:
         name: tfplan
         path: tfplan
-
-    - name: Upload tfstate
-      uses: actions/upload-artifact@v4
-      with:
-        name: .terraform.tfstate
-        path: .terraform.tfstate
     
     - name: Upload Zip Artifacts
       uses: actions/upload-artifact@v4
@@ -89,11 +83,6 @@ jobs:
         with:
           name: ${{env.zip_artifacts}}
           path: ${{env.zip_artifacts}}/
-
-      - name: Download tfstate
-        uses: actions/download-artifact@v4
-        with:
-          name: .terraform.tfstate
 
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v3
