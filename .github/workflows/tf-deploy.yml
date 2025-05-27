@@ -1,4 +1,4 @@
-name: tf-deploy-dev
+name: tf-deploy
 
 permissions:
   id-token: write
@@ -18,19 +18,29 @@ on:
         default: 'no'
 
 jobs:
+  get-env:
+    runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.set-env.outputs.env }}
+    steps:
+      - name: Set environment based on trigger type
+        id: set-env
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "env=prod" >> $GITHUB_OUTPUT
+          else
+            echo "env=dev" >> $GITHUB_OUTPUT
+          fi
 
   tf-plan:
+    needs: [get-env]
     uses: ./.github/workflows/tf-plan.yml
     with:
-      env: dev
-    secrets:
-      aws_role_to_assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      env: ${{needs.get-env.outputs.env}}
 
   tf-apply:
-    needs: tf-plan
+    needs: [tf-plan, get-env]
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
     uses: ./.github/workflows/tf-apply.yml
     with:
-      env: $dev
-    secrets:
-      aws_role_to_assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      env: ${{needs.get-env.outputs.env}}
