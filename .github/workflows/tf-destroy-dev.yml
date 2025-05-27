@@ -4,7 +4,7 @@ name: tf-destroy-dev
 env:
     environment: dev
     terraform_version: 1.6.6
-    destroy_notify_email: "dev.ebritt07@gmail.com"
+
 on:
   workflow_dispatch:
     inputs:
@@ -40,20 +40,10 @@ jobs:
         with:
           terraform_version: ${{ env.terraform_version }}
 
-      - name: Terraform Init, Plan, and save the plan as HTML
+      - name: Terraform Init, Plan
         run: |
           terraform init
-          terraform plan -destroy -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfdestroy.plan > /dev/null
-          terraform show tfdestroy.plan > tfplan.ansi
-          npm install -g ansi-to-html
-          ansi-to-html < tfplan.ansi > destroy-plan.html
+          terraform plan -destroy -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfdestroy.plan
 
-      - name: Show the generate ansi file and destroy plan
-        run: |
-          echo "Generated destroy plan:"
-          cat tfplan.ansi
-          cat destroy-plan.html
-          
-
-      #- name: Terraform Destroy
-      #  run: terraform destroy -auto-approve -var-file="env/${{ env.environment }}/variables.tfvars"
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var-file="env/${{ env.environment }}/variables.tfvars"
