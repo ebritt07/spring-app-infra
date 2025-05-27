@@ -168,7 +168,7 @@ resource "aws_lambda_function" "log_s3_event" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../lambda/log_s3_event"
+  source_dir  = "${path.module}/lambda/log_s3_event"
   output_path = "${path.module}/lambda_log_event.zip"
 }
 
