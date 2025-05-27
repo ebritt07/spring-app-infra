@@ -39,6 +39,7 @@ jobs:
         aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1
 
   tf-apply:
+    needs: [tf-plan]
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
     runs-on: ubuntu-latest
     steps:
