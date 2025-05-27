@@ -9,12 +9,6 @@ permissions:
 on:
   push:
     tags: [v*]
-  workflow_dispatch:
-    inputs:
-      apply-changes:
-        description: 'Apply terraform changes?'
-        required: true
-        default: 'no'
 
 jobs:
   tf-plan:
@@ -38,7 +32,6 @@ jobs:
 
   tf-apply:
     needs: [tf-plan]
-    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.apply-changes == 'yes' }}
     runs-on: ubuntu-latest
     steps:
       - name: tf-apply-${{env.environment}}
