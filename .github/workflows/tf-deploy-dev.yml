@@ -46,7 +46,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan (Save Output)
-        run: terraform plan -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfplan
+        run: terraform plan -var-file="../env/${{ env.environment }}/variables.tfvars" -out=tfplan
 
       - name: Show Terraform Plan Output (with color)
         run: terraform show tfplan
