@@ -46,7 +46,7 @@ jobs:
           terraform plan -destroy -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfdestroy.plan > /dev/null
           terraform show tfdestroy.plan > tfplan.ansi
           npm install -g ansi-to-html
-          ansi-to-html < tfplan-ansi.ansi > destroy-plan.html
+          ansi-to-html < tfplan.ansi > destroy-plan.html
 
       - name: Show the generate ansi file and destroy plan
         run: |
