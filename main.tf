@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_iam_role" "lambda_exec" {
-  name = "${var.bucket_name}-lambda-role"
+  name = "${var.bucket_name}-${var.s3_logger_lambda_name}-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 }
 
 resource "aws_lambda_function" "log_s3_event" {
-  function_name = "${var.bucket_name}-log-events"
+  function_name = "${var.bucket_name}-${var.s3_logger_lambda_name}"
   role          = aws_iam_role.lambda_exec.arn
   runtime       = "python3.12"
   handler       = "main.handler"
@@ -38,8 +38,8 @@ resource "aws_lambda_function" "log_s3_event" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/lambda/log_s3_event"
-  output_path = "${path.module}/zip_artifacts/lambda_log_event.zip"
+  source_dir  = "${path.module}/lambda/${var.s3_logger_lambda_name}"
+  output_path = "${path.module}/${var.zip_path}/${var.s3_logger_lambda_name}.zip"
 }
 
 resource "aws_lambda_permission" "allow_s3" {
