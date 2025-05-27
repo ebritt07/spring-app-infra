@@ -13,7 +13,7 @@ on:
     branches: [main]
 
 jobs:
-  tf-plan:
+  tf-plan-dev:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -26,18 +26,29 @@ jobs:
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: us-east-1
 
-    - name: tf-plan-${{env.environment}}
-      run: |
-        BUCKET_NAME="${{env.environment}}-test-bucket-${{ github.run_id }}"
-        echo "Creating bucket: $BUCKET_NAME"
-        aws s3api create-bucket --bucket "$BUCKET_NAME" --region us-east-1
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.6
 
-  tf-apply:
-    needs: [tf-plan]
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan (Save Output)
+      run: terraform plan -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfplan
+
+    - name: Show Terraform Plan Output (with color)
+      run: terraform show tfplan
+
+  tf-apply-dev:
+    needs: [tf-plan-dev]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} 
     runs-on: ubuntu-latest
     steps:
-      - name: tf-apply-${{env.environment}}
+      - name: Terraform Apply
         run: |
           BUCKET_NAME="test-bucket-${{ github.run_id }}"
           echo "this will eventually deploy $BUCKET_NAME to the ${{env.environment}} AWS environment"
