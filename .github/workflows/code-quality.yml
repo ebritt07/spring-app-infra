@@ -1,0 +1,21 @@
+name: Terraform Code Quality Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  checkov-scan:
+    name: Terraform Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Run checks
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
