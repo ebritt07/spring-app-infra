@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 jobs:
-  tf-destroy-dev:
+  tf-destroy:
     if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_destroy == 'DESTROY') }}
     runs-on: ubuntu-latest
     environment: dev

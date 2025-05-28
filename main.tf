@@ -1,62 +1,14 @@
-provider "aws" {
-  region = var.region
+module "lambda" {
+  source       = "./modules/lambda"
+  bucket_name  = var.bucket_name
+  lambda_name  = var.s3_logger_lambda_name
+  bucket_arn   = module.s3.bucket_arn
+  zip_path     = var.zip_path
 }
 
-resource "aws_s3_bucket" "this" {
-  bucket = var.bucket_name
-  force_destroy = true
-}
-
-resource "aws_iam_role" "lambda_exec" {
-  name = "${var.bucket_name}-${var.s3_logger_lambda_name}-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      },
-      Action = "sts:AssumeRole"
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-resource "aws_lambda_function" "log_s3_event" {
-  function_name = "${var.bucket_name}-${var.s3_logger_lambda_name}"
-  role          = aws_iam_role.lambda_exec.arn
-  runtime       = "python3.12"
-  handler       = "main.handler"
-  filename      = data.archive_file.lambda_zip.output_path
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-}
-
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/${var.s3_logger_lambda_name}"
-  output_path = "${path.module}/${var.zip_path}/${var.s3_logger_lambda_name}.zip"
-}
-
-resource "aws_lambda_permission" "allow_s3" {
-  statement_id  = "AllowExecutionFromS3"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.log_s3_event.arn
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.this.arn
-}
-
-resource "aws_s3_bucket_notification" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.log_s3_event.arn
-    events              = ["s3:ObjectCreated:*"]
-  }
-
-  depends_on = [aws_lambda_permission.allow_s3]
+module "s3" {
+  source            = "./modules/s3_bucket"
+  bucket_name       = var.bucket_name
+  lambda_arns       = {
+    s3_logger = module.lambda.lambda_arn}
 }
