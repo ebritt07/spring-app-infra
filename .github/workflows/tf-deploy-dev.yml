@@ -55,7 +55,7 @@ jobs:
         path: ${{ env.zip_artifacts }}/
 
   tf-apply:
-    needs: [tf-plan-dev]
+    needs: [tf-plan]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment: dev
