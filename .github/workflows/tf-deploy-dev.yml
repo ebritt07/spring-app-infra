@@ -11,8 +11,6 @@ permissions:
 on:
   push:
     branches: [main, feature/*, bugfix/*]
-  pull_request:
-    branches: [main]
 
 jobs:
   tf-plan:
