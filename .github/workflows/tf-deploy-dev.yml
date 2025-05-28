@@ -15,7 +15,7 @@ on:
     branches: [main]
 
 jobs:
-  tf-plan-dev:
+  tf-plan:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -54,7 +54,7 @@ jobs:
         name: ${{ env.zip_artifacts }}
         path: ${{ env.zip_artifacts }}/
 
-  tf-apply-dev:
+  tf-apply:
     needs: [tf-plan-dev]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
