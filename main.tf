@@ -9,5 +9,6 @@ module "lambda" {
 module "s3" {
   source            = "./modules/s3_bucket"
   bucket_name       = var.bucket_name
-  lambda_arns       = [module.lambda.lambda_arn]
+  lambda_arns       = {
+    s3_logger = module.lambda.lambda_arn}
 }

@@ -18,7 +18,7 @@ resource "aws_s3_bucket_notification" "this" {
 }
 
 resource "aws_lambda_permission" "allow_s3" {
-  for_each = toset(var.lambda_arns)
+  for_each = var.lambda_arns
 
   statement_id  = "AllowExecutionFromS3-${each.key}"
   action        = "lambda:InvokeFunction"
