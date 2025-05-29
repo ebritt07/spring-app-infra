@@ -1,11 +1,9 @@
 variable "region" {
-  description = "AWS region"
   type        = string
   default     = "us-east-1"
 }
 
 variable "bucket_name" {
-  description = "Name of the S3 bucket"
   type        = string
   default     = "default-bucket"
 }
@@ -17,13 +15,12 @@ variable "zip_path" {
 }
 
 variable "s3_logger_lambda_name" {
-  description = "Name of the S3 logger Lambda function"
   type        = string
   default     = "s3_logger"
 }
 
 variable "spring_app_ecr_repo" {
-  description = "Name of the repo to store spring app"
+  description = "GitHub repo name to store"
   type        = string
-  default     = "spring-app"
+  default     = "ebritt07/spring-app"
 }
