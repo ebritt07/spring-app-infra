@@ -32,11 +32,10 @@ If you'd like to fork your own version of the spring java app, and deploy to you
 
 4) Fork this repo, and create [Github secret in the appropriate env](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-an-environment), to store the IAM role you created as  `AWS_ROLE_ARN`
     - note, that [role ARN's are not considered secrets](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html). But, this project keeps it secret anyway
-    - for dev environments i'd recommend giving your github iam role full admin access, then using monitoring tools to see what you need for prod
+    - for dev environments i'd recommend giving your github iam role full AWS account admin access, then using monitoring tools to see what you need for prod
 
 5) (One time only) set up your terraform backend to store state info
     - in `/terraform-backend-setup/main.tf` update to your liking:
-        - 
     - update `backend.tf` to match
     - manually trigger the workflow `tf-setup-state-dev` in github actions
 
