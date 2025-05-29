@@ -21,3 +21,9 @@ variable "s3_logger_lambda_name" {
   type        = string
   default     = "s3_logger"
 }
+
+variable "spring_app_ecr_repo" {
+  description = "Name of the repo to store spring app"
+  type        = string
+  default     = "spring-app"
+}

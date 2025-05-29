@@ -12,3 +12,8 @@ module "s3" {
   lambda_arns       = {
     s3_logger = module.lambda.lambda_arn}
 }
+
+module "ecr_repo" {
+  source            = "./modules/ecr"
+  ecr_repo_name     = ""
+}
