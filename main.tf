@@ -6,7 +6,6 @@ module "lambda" {
   zip_path     = var.zip_path
 }
 
-
 module "s3" {
   source            = "./modules/s3_bucket"
   bucket_name       = var.bucket_name
