@@ -24,3 +24,9 @@ variable "spring_app_ecr_repo" {
   type        = string
   default     = "ebritt07/spring-app"
 }
+
+variable "spring_app_version" {
+  description = "Version (branch or tag name) to deploy Spring app to ECS"
+  type        = string
+  default     = "master"
+}
