@@ -10,7 +10,7 @@ permissions:
 
 on:
   push:
-    branches: [main, feature/*, bugfix/*]
+    branches: [main, feature-*, bugfix-*]
 
 jobs:
   tf-plan:
