@@ -2,8 +2,8 @@ name: tf-destroy-dev
 # runs early every morning or on manual trigger with confirmation
 
 env:
-    environment: dev
-    terraform_version: 1.6.6
+  environment: dev
+  terraform_version: 1.6.6
 
 on:
   workflow_dispatch:

@@ -1,8 +1,8 @@
 name: tf-setup-state-dev
 
 env:
-    environment: dev
-    terraform_version: 1.6.6
+  environment: dev
+  terraform_version: 1.6.6
 on:
   workflow_dispatch:
 

@@ -2,13 +2,18 @@
 
 This project securely deploys the repo: https://github.com/ebritt07/spring-app using terraform
 
-If you'd like to fork your own version of the spring java app, and deploy to your own AWS Account here's how you can do it:
+If you'd like to fork your own version of the spring java app, and deploy to your own AWS Account here's how you can do
+it:
 
 1) Make two AWS accounts. One will be your prod env, and one will be your DEV env.
-2) [Create environments in Github](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment) named "dev" and "prod".
-3) [Create an IAM role for your Github repo](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) to assume when deploying. Here's an example for the **dev** AWS account connecting to your **dev** Github environment.
+2) [Create environments in Github](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment)
+   named "dev" and "prod".
+3) [Create an IAM role for your Github repo](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
+   to assume when deploying. Here's an example for the **dev** AWS account connecting to your **dev** Github
+   environment.
     - AWS IAM -> Create Role (type=Custom Trust policy)
     - Set the Trust policy as such:
+
 ```
     {
     "Version": "2012-10-17",
@@ -30,9 +35,14 @@ If you'd like to fork your own version of the spring java app, and deploy to you
 }
 ```
 
-4) Fork this repo, and create [Github secret in the appropriate env](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-an-environment), to store the IAM role you created as  `AWS_ROLE_ARN`
-    - note, that [role ARN's are not considered secrets](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html). But, this project keeps it secret anyway
-    - for dev environments i'd recommend giving your github iam role full AWS account admin access, then using monitoring tools to see what you need for prod
+4) Fork this repo, and
+   create [Github secret in the appropriate env](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-an-environment),
+   to store the IAM role you created as  `AWS_ROLE_ARN`
+    - note,
+      that [role ARN's are not considered secrets](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html).
+      But, this project keeps it secret anyway
+    - for dev environments i'd recommend giving your github iam role full AWS account admin access, then using
+      monitoring tools to see what you need for prod
 
 5) (One time only) set up your terraform backend to store state info
     - in `/terraform-backend-setup/main.tf` update to your liking:
@@ -41,5 +51,6 @@ If you'd like to fork your own version of the spring java app, and deploy to you
 
 6) Infra project is ready for use! Check out some of the features:
     - ✅ automatically **cleans your dev environment** each day in the morning, so you don't run up a bill!
-    - ✅ runs security checks to make sure you are deploying infra safely, and doesn't use any secrets authenticating with AWS
+    - ✅ runs security checks to make sure you are deploying infra safely, and doesn't use any secrets authenticating
+      with AWS
     - ✅ comes with a starter infra pack of an s3 bucket and a lambda trigger, if you don't want to deploy any java code

@@ -1,11 +1,11 @@
 variable "region" {
-  type        = string
-  default     = "us-east-1"
+  type    = string
+  default = "us-east-1"
 }
 
 variable "bucket_name" {
-  type        = string
-  default     = "default-bucket"
+  type    = string
+  default = "default-bucket"
 }
 
 variable "zip_path" {
@@ -15,8 +15,8 @@ variable "zip_path" {
 }
 
 variable "s3_logger_lambda_name" {
-  type        = string
-  default     = "s3_logger"
+  type    = string
+  default = "s3_logger"
 }
 
 variable "spring_app_ecr_repo" {
@@ -29,4 +29,8 @@ variable "spring_app_version" {
   description = "Version (branch or tag name) to deploy Spring app to ECS"
   type        = string
   default     = "master"
+}
+
+variable "aws_account_id" {
+  type = string
 }
