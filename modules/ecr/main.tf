@@ -10,8 +10,8 @@ resource "aws_ecr_repository" "app_repo" {
     scan_on_push = true
   }
 
-  }
-  
+}
+
 resource "aws_ecr_lifecycle_policy" "app_repo_policy" {
   repository = aws_ecr_repository.app_repo.name
 
@@ -21,10 +21,10 @@ resource "aws_ecr_lifecycle_policy" "app_repo_policy" {
         rulePriority = 1
         description  = "Expire untagged images after 30 days"
         selection = {
-          tagStatus     = "untagged"
-          countType     = "sinceImagePushed"
-          countUnit     = "days"
-          countNumber   = 30
+          tagStatus   = "untagged"
+          countType   = "sinceImagePushed"
+          countUnit   = "days"
+          countNumber = 30
         }
         action = {
           type = "expire"
@@ -34,11 +34,11 @@ resource "aws_ecr_lifecycle_policy" "app_repo_policy" {
         rulePriority = 2
         description  = "Expire tagged images older than 60 days"
         selection = {
-          tagStatus     = "tagged"
+          tagStatus   = "tagged"
           tagPrefixList = ["feature", "master", "v"]
-          countType     = "sinceImagePushed"
-          countUnit     = "days"
-          countNumber   = 60
+          countType   = "sinceImagePushed"
+          countUnit   = "days"
+          countNumber = 60
         }
         action = {
           type = "expire"

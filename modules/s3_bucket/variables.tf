@@ -4,5 +4,5 @@ variable "bucket_name" {
 
 variable "lambda_arns" {
   description = "List of Lambda function ARNs to allow invocation from S3"
-  type        = map(string)
+  type = map(string)
 }
