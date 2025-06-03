@@ -138,11 +138,12 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
 }
 
 resource "aws_ecs_task_definition" "spring_app" {
-  family       = "spring-app-task"
+  family                   = "spring-app-task"
   requires_compatibilities = ["FARGATE"]
-  network_mode = "awsvpc"
-  cpu          = var.fargate_cpu
-  memory       = var.fargate_memory
+  network_mode             = "awsvpc"
+  cpu                      = var.fargate_cpu
+  memory                   = var.fargate_memory
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
