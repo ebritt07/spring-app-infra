@@ -17,3 +17,10 @@ module "spring_app_ecr_repo" {
   source            = "./modules/ecr"
   ecr_repo_name     = var.spring_app_ecr_repo
 }
+
+module "network" {
+  source            = "./modules/network"
+  region = var.region
+  spring_app_ecr_repo = var.spring_app_ecr_repo
+  spring_app_version = var.spring_app_version
+}
