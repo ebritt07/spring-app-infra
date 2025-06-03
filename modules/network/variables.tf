@@ -17,7 +17,7 @@ variable "app_count" {
 }
 
 variable "health_check_path" {
-  default = "/ping"
+  default = "/spring-app/ping"
 }
 
 variable "fargate_cpu" {
