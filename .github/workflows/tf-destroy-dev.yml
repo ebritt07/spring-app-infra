@@ -40,10 +40,17 @@ jobs:
         with:
           terraform_version: ${{ env.terraform_version }}
 
-      - name: Destroy ECR images
+      - name: Destroy all images for all ECR Repositories
         run: |
-          aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text
-          aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text | xargs -n 1 -I {} aws ecr delete-repository --repository-name {} --force
+          for repo in $(aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text); do
+            echo "Deleting images in repo: $repo"
+            image_ids=$(aws ecr list-images --repository-name "$repo" --query 'imageIds[*]' --output json)
+            if [[ "$image_ids" != "[]" ]]; then
+              aws ecr batch-delete-image --repository-name "$repo" --image-ids "$image_ids"
+            else
+              echo "  No images to delete in $repo"
+            fi
+          done
 
       - name: Terraform Init, Plan
         run: |
