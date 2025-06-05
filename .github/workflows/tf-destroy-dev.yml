@@ -40,6 +40,11 @@ jobs:
         with:
           terraform_version: ${{ env.terraform_version }}
 
+      - name: Destroy ECR images
+        run: |
+          aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text
+          aws ecr describe-repositories --query 'repositories[*].repositoryName' --output text | xargs -n 1 -I {} aws ecr delete-repository --repository-name {} --force
+
       - name: Terraform Init, Plan
         run: |
           terraform init
