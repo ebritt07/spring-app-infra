@@ -119,18 +119,3 @@ resource "aws_ecs_service" "spring_app" {
 
   depends_on = [aws_iam_role.ecs_task_execution_role, aws_iam_role_policy_attachment.ecs_task_execution_policy]
 }
-
-
-data "aws_network_interface" "task_eni" {
-  filter {
-    name   = "description"
-    values = ["Interface for ECS Task"]
-  }
-
-  filter {
-    name   = "group-id"
-    values = [aws_security_group.ecs_sg.id]
-  }
-
-  depends_on = [aws_ecs_service.spring_app]
-}

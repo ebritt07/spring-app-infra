@@ -1,3 +1,3 @@
-output "ecs_task_public_ip" {
-  value = module.network.ecs_task_public_ip
+output "ecs_service_detail" {
+  value = module.network.ecs_service_details
 }
