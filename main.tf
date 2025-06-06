@@ -34,4 +34,5 @@ module "network" {
   spring_app_ecr_repo = var.spring_app_ecr_repo
   spring_app_version  = var.spring_app_version
   aws_account_id      = var.aws_account_id
+  service_name        = var.service_name
 }
