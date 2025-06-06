@@ -1,5 +1,11 @@
 provider "aws" {
   region = var.region
+  default_tags {
+    tags = {
+      Project    = "spring-app"
+      Created-By = "terraform/ebritt07"
+    }
+  }
 }
 
 module "lambda" {
@@ -22,10 +28,11 @@ module "spring_app_ecr_repo" {
   ecr_repo_name = var.spring_app_ecr_repo
 }
 
-# module "network" {
-#   source              = "./modules/network"
-#   region              = var.region
-#   spring_app_ecr_repo = var.spring_app_ecr_repo
-#   spring_app_version  = var.spring_app_version
-#   aws_account_id      = var.aws_account_id
-# }
+module "network" {
+  source              = "./modules/network"
+  region              = var.region
+  spring_app_ecr_repo = var.spring_app_ecr_repo
+  spring_app_version  = var.spring_app_version
+  aws_account_id      = var.aws_account_id
+  service_name        = var.service_name
+}

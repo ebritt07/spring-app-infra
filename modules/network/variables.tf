@@ -1,47 +1,39 @@
-# ## Network Variables
-# variable "az_count" {
-#   description = "Number of AZs to cover in a given region"
-#   default     = 2
-# }
+variable "region" {
+  type = string
+}
 
-# variable "region" {
-#   type = string
-# }
+variable "app_count" {
+  description = "Number of docker containers to run"
+  default     = 2
+}
 
-# ## ECS Variables
+variable "fargate_cpu" {
+  description = "Fargate instance CPU units to provision (1 vCPU = 1024 CPU units)"
+  default     = 512
+}
 
-# variable "app_count" {
-#   description = "Number of docker containers to run"
-#   default     = 2
-# }
+variable "fargate_memory" {
+  description = "Fargate instance memory to provision (in MiB)"
+  default     = 1024
+}
 
-# variable "health_check_path" {
-#   default = "/spring-app/ping"
-# }
+variable "app_port" {
+  description = "Port spring app will listen on"
+  default     = 8445
+}
 
-# variable "fargate_cpu" {
-#   description = "Fargate instance CPU units to provision (1 vCPU = 1024 CPU units)"
-#   default     = 512
-# }
+variable "spring_app_ecr_repo" {
+  type = string
+}
 
-# variable "fargate_memory" {
-#   description = "Fargate instance memory to provision (in MiB)"
-#   default     = 1024
-# }
+variable "spring_app_version" {
+  type = string
+}
 
-# variable "app_port" {
-#   description = "Port spring app will listen on"
-#   default     = 8445
-# }
+variable "aws_account_id" {
+  type = string
+}
 
-# variable "spring_app_ecr_repo" {
-#   type = string
-# }
-
-# variable "spring_app_version" {
-#   type = string
-# }
-
-# variable "aws_account_id" {
-#   type = string
-# }
+variable "service_name" {
+  type = string
+}

@@ -34,3 +34,7 @@ variable "spring_app_version" {
 variable "aws_account_id" {
   type = string
 }
+
+variable "service_name" {
+  type = string
+}
