@@ -10,11 +10,36 @@ permissions:
 
 on:
   push:
-    branches: [ main, feature-*, bugfix-* ]
+    branches: [main, feature-*, bugfix-*]
+  workflow_dispatch:
+    inputs:
+      use_self_hosted:
+        description: "Run on a self-hosted runner"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 jobs:
-  tf-plan:
+  calculate-runner:
     runs-on: ubuntu-latest
+    outputs:
+      runner: ${{ steps.set-runner.outputs.runner }}
+    steps:
+      - name: Set Runner
+        id: set-runner
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.use_self_hosted }}" == "true" ]; then
+            echo "runner=self-hosted" | tee -a $GITHUB_OUTPUT
+          else
+            echo "runner=ubuntu-latest" | tee -a $GITHUB_OUTPUT
+          fi
+
+  tf-plan:
+    needs: calculate-runner
+    runs-on: ${{ needs.calculate-runner.outputs.runner }}
     environment: dev
     steps:
       - name: Checkout repo
@@ -53,9 +78,9 @@ jobs:
           path: ${{ env.zip_artifacts }}/
 
   tf-apply:
-    needs: [ tf-plan ]
+    needs: [calculate-runner, tf-plan]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.calculate-runner.outputs.runner }}
     environment: dev
     steps:
       - name: Checkout repo
