@@ -18,7 +18,7 @@ jobs:
     environment: prod
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
         with:
@@ -59,7 +59,7 @@ jobs:
     environment: prod
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
