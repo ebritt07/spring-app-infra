@@ -66,13 +66,13 @@ jobs:
         run: terraform plan -var-file="env/${{ env.environment }}/variables.tfvars" -out=tfplan
 
       - name: Upload Plan Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: tfplan
           path: tfplan
 
       - name: Upload Zip Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.zip_artifacts }}
           path: ${{ env.zip_artifacts }}/
