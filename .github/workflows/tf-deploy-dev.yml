@@ -43,7 +43,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
         with:
@@ -84,7 +84,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4.2.1
