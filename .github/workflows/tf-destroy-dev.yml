@@ -11,8 +11,8 @@ on:
       confirm_destroy:
         description: "Type 'DESTROY' to confirm"
         required: true
-  # schedule:
-  #   - cron: '0 10 * * *' # Daily at 10am UTC
+  schedule:
+    - cron: '0 13 2 * *'
 
 permissions:
   id-token: write
