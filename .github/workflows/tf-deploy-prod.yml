@@ -27,7 +27,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Setup
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ env.terraform_version }}
 
@@ -80,7 +80,7 @@ jobs:
           path: ${{env.zip_artifacts}}/
 
       - name: Terraform Setup
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ env.terraform_version }}
 
